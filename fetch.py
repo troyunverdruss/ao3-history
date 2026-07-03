@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 
 from requests import Session
 
+from db import connect
+
 
 def login(session, base_url, username, password):
     login_url = f"{base_url}/users/login"
@@ -53,6 +55,6 @@ def sync(args):
     login(session, base_url, args.username, password)
     print("Logged in.")
 
-
+    conn = connect(args.db)
 
     print("Sync not implemented yet.")
