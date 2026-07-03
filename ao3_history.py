@@ -6,24 +6,12 @@ import sys
 
 import requests
 
+from fetch import sync
+from search import search
+from stats import stats
+
 DEFAULT_BASE_URL = "http://localhost:3001"
 DEFAULT_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "history.db")
-
-
-def sync(args):
-    print(args)
-    print("Sync not implemented yet.")
-
-
-def search(args):
-    print(args)
-    print("Search not implemented yet.")
-
-
-def stats(args):
-    print(args)
-    print("Stats not implemented yet.")
-
 
 def main():
     p = argparse.ArgumentParser(description="Download and search your AO3 reading history.")
