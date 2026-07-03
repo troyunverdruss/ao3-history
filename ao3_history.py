@@ -10,15 +10,18 @@ DEFAULT_BASE_URL = "http://localhost:3001"
 DEFAULT_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "history.db")
 
 
-def sync():
+def sync(args):
+    print(args)
     print("Sync not implemented yet.")
 
 
-def search():
+def search(args):
+    print(args)
     print("Search not implemented yet.")
 
 
-def stats():
+def stats(args):
+    print(args)
     print("Stats not implemented yet.")
 
 
