@@ -16,10 +16,24 @@ def connect(db_path):
             url          TEXT,
             fandoms      TEXT,
             tags         TEXT,
-            last_visited TEXT,
-            view_count   INTEGER,
-            synced_at    TEXT
+            synced_at    TIMESTAMP
         )
         """
     )
     return conn
+
+def upsert(conn, work):
+    conn.execute(
+        """
+        INSERT INTO works (work_id, title, author, url, fandoms, tags, synced_at)
+        VALUES (:work_id, :title, :author, :url, :fandoms, :tags, CURRENT_TIMESTAMP)
+        ON CONFLICT(work_id) DO UPDATE SET title=excluded.title,
+                                           author=excluded.author,
+                                           url=excluded.url,
+                                           fandoms=excluded.fandoms,
+                                           tags=excluded.tags,
+                                           synced_at=excluded.synced_at
+        """,
+        work,
+    )
+    conn.commit()

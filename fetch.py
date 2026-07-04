@@ -3,9 +3,8 @@ import os
 
 from bs4 import BeautifulSoup
 
+from db import connect, upsert
 from requests import Session
-
-from db import connect
 
 
 def login(session, base_url, username, password):
@@ -57,4 +56,46 @@ def sync(args):
 
     conn = connect(args.db)
 
-    print("Sync not implemented yet.")
+    history_url = f"{base_url}/users/{args.username}/readings"
+    current_page = 1
+
+    while True:
+        resp = session.get(history_url, params={"page": current_page}, timeout=30)
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "html.parser")
+
+        entries = soup.select("ol.reading li.blurb")
+
+        if not entries:
+            break
+
+        for entry in entries:
+            work = {
+                "work_id": None,
+                "title": None,
+                "author": None,
+                "url": None,
+                "fandoms": "",
+                "tags": "",
+            }
+
+            work_id = entry["id"]
+            if not work_id:
+                continue
+
+            work["work_id"] = int(work_id.replace("work_", ""))
+            work["title"] = entry.select_one("h4.heading a").get_text(strip=True)
+            work["url"] = base_url + entry.select_one("h4.heading a").get("href")
+            authors = list(map(lambda x: x.get_text(strip=True), entry.select("h4.heading a[rel=author]")))
+            work["author"] = ", ".join(authors)
+            fandoms = list(map(lambda x: x.get_text(strip=True), entry.select("h5.fandoms.heading a")))
+            work["fandoms"] = ", ".join(fandoms)
+            tags = list(map(lambda x: x.get_text(strip=True), entry.select("ul.tags li a.tag")))
+            work["tags"] = ", ".join(tags)
+
+            print(f"Inserting #{work}")
+            upsert(conn, work)
+
+        # Finished the page
+        current_page += 1
+    conn.close()
