@@ -8,7 +8,6 @@ import requests
 
 from fetch import sync
 from search import search
-from stats import stats
 
 DEFAULT_BASE_URL = "http://localhost:3001"
 DEFAULT_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "history.db")
@@ -30,9 +29,6 @@ def main():
     sp.add_argument("--tag", help="Require this tag.")
     sp.add_argument("--limit", type=int, default=25)
     sp.set_defaults(func=search)
-
-    sp = sub.add_parser("stats", help="Show how many works are stored.")
-    sp.set_defaults(func=stats)
 
     args = p.parse_args()
     try:
