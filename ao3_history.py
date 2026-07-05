@@ -26,7 +26,7 @@ def main():
 
     sp = sub.add_parser("search", help="Search stored history by title/tags.")
     sp.add_argument("query", nargs="?", default="", help="Free text (matches title, tags, fandoms, author).")
-    sp.add_argument("--tag", help="Require this tag.")
+    sp.add_argument("--tag", action="append", help="Require this tag.")
     sp.add_argument("--limit", type=int, default=25)
     sp.set_defaults(func=search)
 
