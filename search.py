@@ -9,3 +9,4 @@ def search(args):
         print(f"  By: {row["author"]}")
         print(f"  Tags: {row["tags"]}")
         print(f"  url: {row["url"]}")
+        print("")

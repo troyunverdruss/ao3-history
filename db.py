@@ -56,5 +56,4 @@ def query(conn, args):
             sql += " AND tags LIKE ?"
             params.append(f"%{tag}%")
 
-    print(sql)
     return conn.execute(sql, params).fetchall()
