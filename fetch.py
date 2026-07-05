@@ -1,11 +1,16 @@
 import getpass
 import os
+import time
 
 from bs4 import BeautifulSoup
 
 from db import connect, upsert
 from requests import Session
 
+MIN_MILLIS_BETWEEN_REQUESTS = 1000
+
+def epoch_millis():
+    return int(time.time_ns() / 1000000)
 
 def login(session, base_url, username, password):
     login_url = f"{base_url}/users/login"
@@ -58,8 +63,15 @@ def sync(args):
 
     history_url = f"{base_url}/users/{args.username}/readings"
     current_page = 1
+    current_time = epoch_millis()
 
     while True:
+        remaining_ms = MIN_MILLIS_BETWEEN_REQUESTS - (epoch_millis() - current_time)
+        if remaining_ms > 0:
+            print(f"Sleeping for {remaining_ms}ms")
+            time.sleep(remaining_ms / 1000)
+        current_time = epoch_millis()
+
         resp = session.get(history_url, params={"page": current_page}, timeout=30)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
