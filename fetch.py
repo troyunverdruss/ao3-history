@@ -96,6 +96,11 @@ def sync(args):
                 continue
 
             work["work_id"] = int(work_id.replace("work_", ""))
+            title_element = entry.select_one("h4.heading a")
+            if title_element is None:
+                # Can't see this or maybe it's deleted
+                continue
+
             work["title"] = entry.select_one("h4.heading a").get_text(strip=True)
             work["url"] = base_url + entry.select_one("h4.heading a").get("href")
             authors = list(map(lambda x: x.get_text(strip=True), entry.select("h4.heading a[rel=author]")))
