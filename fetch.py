@@ -91,9 +91,7 @@ def sync(args):
                 "tags": "",
             }
 
-            if "id" not in entry:
-                continue
-
+            print(f"-----> {entry}")
             work_id = entry["id"]
             if not work_id:
                 continue
