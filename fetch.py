@@ -76,7 +76,7 @@ def sync(args):
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
 
-        entries = soup.select("ol.reading li.blurb")
+        entries = soup.select("ol.reading li.blurb:not(.deleted)")
 
         if not entries:
             break
