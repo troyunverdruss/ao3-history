@@ -82,8 +82,6 @@ def sync(args):
             break
 
         for entry in entries:
-            if not entry:
-                continue
             work = {
                 "work_id": None,
                 "title": None,
@@ -92,6 +90,9 @@ def sync(args):
                 "fandoms": "",
                 "tags": "",
             }
+
+            if "id" not in entry:
+                continue
 
             work_id = entry["id"]
             if not work_id:
